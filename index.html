@@ -1,77 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livraria</title>
-    <link rel="stylesheet" href="estilos.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://cdn.jsdelivr.net/npm/validator@13.6.0"></script>
+  <title>Compra Online</title>
 </head>
-
 <body>
-    <header>
-        <h1>Livraria Fantástica</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Início</a></li>
-                <li><a href="#">Livros</a></li>
-                <li><a href="#">Autores</a></li>
-                <li><a href="#">Contato</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section class="cards">
-            <div class="card">
-                <img src="img/a-culpa-e-das-estrelas.webp" alt="Livro 01">
-                <h2>A Culpa é das Estrelas</h2>
-                <p>Autor: John Green</p>
-                <button>Comprar</button>
-            </div>
-
-            <div class="card">
-                <img src="img/harry-potter.jpg" alt="Livro 02">
-                <h2>Harry Potter e a Pedra Filosofal</h2>
-                <p>Autora: J. K. Rowling</p>
-                <button>Comprar</button>
-            </div>
-
-            <div class="card">
-                <img src="img/pequeno-príncipe.jpg" alt="Livro 03">
-                <h2>O Pequeno Príncipe</h2>
-                <p>Autor: Antoine de Saint-Exupéry </p>
-                <button>Comprar</button>
-            </div>
-        </section>
-        
-        <section class="cards">
-            <div class="card">
-                <img src="img/amor-e-gelato.jpg" alt="Livro 01">
-                <h2>Amor e Gelato</h2>
-                <p>Autora: Jenna Evans Welch</p>
-                <button>Comprar</button>
-            </div>
-
-            <div class="card">
-                <img src="img/amor-e-sorte.jpg" alt="Livro 02">
-                <h2>Amor e Sorte</h2>
-                <p>Autora: Jenna Evans Welch</p>
-                <button>Comprar</button>
-            </div>
-
-            <div class="card">
-                <img src="img/amor-e-azeitonas.jpg" alt="Livro 03">
-                <h2>Amor e Azeitonas</h2>
-                <p>Autora: Jenna Evans Welch</p>
-                <button>Comprar</button>
-            </div>
-        </section>    
-    </main>
-
-    <footer>
-        <p>&copy; 2023 Livraria Fantástica | Criado por Sophia Duquesne</p>
-    </footer>
-
+  <div id="app">
+    <h1>Loja Online</h1>
+    <div id="cart">
+      <h2>Carrinho de Compras</h2>
+      <ul id="cart-items"></ul>
+      <p id="total">Total: R$ 0.00</p>
+      <button> <a href="compra.html">Finalizar Compra</a></button>
+    </div>
+    <div id="products">
+      <h2>Produtos</h2>
+      <ul>
+        <li>Produto 1 - R$ 10.00 <button onclick="addToCart(1)">Adicionar ao Carrinho</button></li>
+        <li>Produto 2 - R$ 20.00 <button onclick="addToCart(2)">Adicionar ao Carrinho</button></li>
+        <li>Produto 3 - R$ 15.00 <button onclick="addToCart(3)">Adicionar ao Carrinho</button></li>
+        <li>Produto 4 - R$ 25.00 <button onclick="addToCart(4)">Adicionar ao Carrinho</button></li>
+        <li>Produto 5 - R$ 30.00 <button onclick="addToCart(5)">Adicionar ao Carrinho</button></li>
+      </ul>
+    </div>
+  </div>
+  <script src="myscript.js"></script>
 </body>
 </html>
