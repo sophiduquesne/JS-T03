@@ -1,9 +1,13 @@
 const products = [
-    { id: 1, name: 'Produto 1', price: 10.00 },
-    { id: 2, name: 'Produto 2', price: 20.00 },
-    { id: 3, name: 'Produto 3', price: 15.00 },
-    { id: 4, name: 'Produto 4', price: 25.00 },
-    { id: 5, name: 'Produto 5', price: 30.00 },
+    { id: 1, name: 'Bis Lacta Preto', price: 5.99 },
+    { id: 2, name: 'Bis Lacta Branco', price: 6.00 },
+    { id: 3, name: 'Caixa de Bombom Lacta', price: 18.90 },
+    { id: 4, name: 'Caixa de Bombom Nestlé', price: 16.50 },
+    { id: 5, name: 'Caixa Ferrero Rocher - 15un', price: 45.00 },
+    { id: 6, name: 'Caixa Ferrero Rondnoir - 14un', price: 48.00 },
+    { id: 7, name: 'Caixa Raffaello - 15un', price: 49.99 },
+    { id: 8, name: 'Kit kat Nestlé Preto', price: 4.00 },
+    { id: 9, name: 'Kit Kat Nestlé Branco', price: 4.50 },
   ];
   
   let cart = [];
