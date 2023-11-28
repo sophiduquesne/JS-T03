@@ -20,23 +20,37 @@
     </nav>
   </header>
   <h1>Informações da Compra</h1>
-  <form>
+  <form id="purchaseForm">
     <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" value="" required>
+    <input type="text" id="nome" name="nome" pattern="[A-Za-zÀ-ú\s]+" title="Digite apenas letras e espaços" placeholder="Digite seu nome" required>
 
     <label for="cpf">CPF:</label>
-    <input type="cpf" id="cpf" name="cpf" value="" pattern="\d{3}.d{3}.d{3}-d{2} " required>
+    <input type="text" id="cpf" name="cpf" value="" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="Ex: 999.999.999-99" required>
 
     <label for="email">E-mail:</label>
-    <input type="email" id="email" name="email" value="" required>
+    <input type="email" id="email" name="email" value="" placeholder="Ex: exemplo@exemplo.com" required>
 
     <label for="telefone">Telefone:</label>
-    <input type="tel" id="telefone" name="telefone" value="" pattern="\d{10,11}" required>
+    <input type="tel" id="telefone" name="telefone" value="" pattern="\d{10,11}" placeholder="Ex: 99999999999" required>
 
     <label for="cep">CEP:</label>
-    <input type="text" id="cep" name="cep" value="" pattern="\d{8}" required>
+    <input type="text" id="cep" name="cep" value="" pattern="\d{8}" placeholder="Ex: 12345000" required>
 
-    <button type="submit" onclick="checkout()">Confirmar Compra</button>
+    <button type="submit">Confirmar Compra</button>
   </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/validator@13.6.0"></script>
+  <script src="myscript.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const purchaseForm = document.getElementById('purchaseForm');
+      purchaseForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Evita o envio tradicional do formulário
+
+        // Chama a função de checkout definida no myscript.js
+        checkout();
+      });
+    });
+  </script>
 </body>
 </html>
