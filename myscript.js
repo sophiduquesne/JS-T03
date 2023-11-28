@@ -12,18 +12,69 @@ const products = [
 
 let cart = [];
 
+function renderProducts() {
+  const productsList = document.querySelector('#products ul');
+  productsList.innerHTML = '';
+  products.forEach(product => {
+    const li = document.createElement('li');
+    li.innerHTML = `${product.name} - R$ ${product.price.toFixed(2)} <button onclick="addToCart(${product.id})">Adicionar ao Carrinho</button>`;
+    productsList.appendChild(li);
+  });
+}
+
+function renderCart() {
+  const cartList = document.querySelector('#cart-items');
+  const totalElement = document.querySelector('#total');
+  cartList.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    const li = document.createElement('li');
+    li.innerHTML = `${item.name} - R$ ${item.price.toFixed(2)} x${item.quantity} <button onclick="removeFromCart(${item.id})">Remover</button>`;
+    cartList.appendChild(li);
+    total += item.price * item.quantity;
+  });
+  totalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
+}
+
+function addToCart(productId) {
+  const product = products.find(p => p.id === productId);
+  if (product) {
+    const cartItem = cart.find(item => item.id === productId);
+    if (cartItem) {
+      cartItem.quantity++;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    renderCart();
+  }
+}
+
+function removeFromCart(productId) {
+  const index = cart.findIndex(item => item.id === productId);
+  if (index !== -1) {
+    if (cart[index].quantity > 1) {
+      cart[index].quantity--;
+    } else {
+      cart.splice(index, 1);
+    }
+    renderCart();
+  }
+}
+
 function checkout() {
   if (cart.length > 0) {
     const totalPrice = calculateTotal().toFixed(2);
 
+    // Preencher o objeto com os dados do cliente
     const cliente = {
-      nome: document.getElementById('nome').value,
-      cpf: document.getElementById('cpf').value,
-      email: document.getElementById('email').value,
-      telefone: document.getElementById('telefone').value,
-      cep: document.getElementById('cep').value,
+      nome: prompt('Nome do cliente:'),
+      cpf: prompt('CPF:'),
+      email: prompt('E-mail:'),
+      telefone: prompt('Telefone:'),
+      cep: prompt('CEP:')
     };
 
+    // Validar os campos
     const isNomeValid = validator.isLength(cliente.nome, { min: 1, max: 255 });
     const isCpfValid = validator.isCPF(cliente.cpf);
     const isEmailValid = validator.isEmail(cliente.email);
@@ -35,34 +86,14 @@ function checkout() {
       return;
     }
 
-    const dadosCompra = {
-      cliente: cliente,
-      carrinho: cart,
-      total: totalPrice,
-    };
-
-    fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dadosCompra),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Sucesso ao enviar dados:', data);
-        alert('Compra finalizada com sucesso!');
-        resetCart();
-        renderCart();
-      })
-      .catch(error => {
-        console.error('Erro ao enviar dados:', error);
-        alert('Erro ao finalizar a compra. Por favor, tente novamente.');
-      });
+    // Redirecionar para a página de compra
+    window.location.href = `compra.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
   } else {
     alert('Adicione produtos ao carrinho antes de finalizar a compra.');
   }
 }
+
+
 
 function calculateTotal() {
   let total = 0;
@@ -74,8 +105,19 @@ function calculateTotal() {
 
 function resetCart() {
   cart = [];
-}
+} 
 
 document.addEventListener('DOMContentLoaded', () => {
-  // renderProducts(); // Se necessário, descomente esta linha
+  renderProducts();
 });
+
+
+function validateEmail(email) {
+  var re = /\S+@\S+\.\S+/;
+  return re.test(email);
+}
+    
+console.log(validateEmail('texto@texto.com')); // true
+console.log(validateEmail('texto@texto')); // false
+console.log(validateEmail('texto.com')); // false
+console.log(validateEmail('texto')); // false
