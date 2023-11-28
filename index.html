@@ -12,13 +12,13 @@
   <header>
     <h1>Encanto Cacau </h1>
     <nav>
-        <ul>
-            <li><a href="index.html">Início</a></li>
-            <li><a href="#">Chocolates</a></li>
-            <li><a href="#">Nossas Marcas</a></li>
-            <li><a href="#">Contato</a></li>
-            <li><a href="compra.html">Sua Compra</a></li>
-        </ul>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="#">Chocolates</a></li>
+        <li><a href="#">Nossas Marcas</a></li>
+        <li><a href="#">Contato</a></li>
+        <li><a href="#">Sua Compra</a></li>
+      </ul>
     </nav>
   </header>
   <div id="app">
@@ -26,18 +26,19 @@
       <i class="fa fa-shopping-cart" aria-hidden="true"></i><h2>Carrinho de Compras</h2>
       <ul id="cart-items"></ul>
       <p id="total">Total: R$ 0.00</p>
-      <button> <a href="compra.html">Finalizar Compra</a></button>
+      <button> <a href="#myform">Finalizar Compra</a></button>
+      <button onclick="calculateTotalSales()">Calcular Total de Vendas</button>
     </div>
   </div>
 
   <main>
     <section class="cards">
-        <div class="card">
-            <img src="img/bis preto.jpg" alt="Bis Preto">
-            <h2>Bis Lacta Preto</h2>
-            <p>R$ 5,99</p>
-            <button onclick="addToCart(1)">Adicionar ao Carrinho</button>
-        </div>
+      <div class="card">
+        <img src="img/bis preto.jpg" alt="Bis Preto">
+        <h2>Bis Lacta Preto</h2>
+        <p>R$ 5,99</p>
+        <button onclick="addToCart(1)">Adicionar ao Carrinho</button>
+      </div>
 
         <div class="card">
             <img src="img/bis.jpg" alt="Bis branco">
@@ -98,12 +99,39 @@
       <p>R$ 4,50</p>
       <button onclick="addToCart(9)">Adicionar ao Carrinho </button>
     </div>
-  </section>   
-</main>
+    <section class="form">
+      <form id="myform">
+        <fieldset>
+          <legend>Informações para compra:</legend>
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" pattern="[A-Za-zÀ-ú\s]+" title="Digite apenas letras e espaços" placeholder="Digite seu nome" required>
 
-<footer>
+          <label for="cpf">CPF:</label>
+          <input type="text" id="cpf" name="cpf" value="" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="Ex: 999.999.999-99" required>
+
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" name="email" value="" placeholder="Ex: exemplo@exemplo.com" required>
+
+          <label for="telefone">Telefone:</label>
+          <input type="number" id="telefone" name="telefone" value="" pattern="\d{10,11}" placeholder="Ex: 99999999999" required>
+
+          <label for="cep">CEP:</label>
+          <input type="text" id="cep" name="cep" value="" pattern="\d{5}-\d{3}" placeholder="Ex: 12345000" required>
+
+          <textarea name="mensagem" id="mensagem" cols="30" rows="10"></textarea>
+
+          <p id="totalForm">Total: R$ 0.00</p>
+          <p id="cart-quantity">Produtos escolhidos: 0</p>
+
+          <button type="button" onclick="checkout();">Confirmar Compra</button>
+        </fieldset>
+      </form>
+    </section>
+  </main>
+
+  <footer>
     <p>&copy; 2023 Encanto Cacau | Criado por Sophia Duquesne e Carlos Eduardo </p>
-</footer>
+  </footer>
 
   <script src="myscript.js"></script>
 </body>

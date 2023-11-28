@@ -134,4 +134,41 @@ footer {
     background-color: #80804c;
     transition: 0.5s;
   }
+
+  form {
+    padding: 20px;
+    overflow: hidden;
+  }
   
+  form fieldset {
+    border: 1px solid #80804c;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  form legend {
+    font-weight: bold;
+    color: #80804c;
+  }
+  
+  .input-container {
+    margin-bottom: 10px;
+}
+
+.input-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type=email] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #80804c;
+  border-radius: 4px;
+  color: #80804c;
+}

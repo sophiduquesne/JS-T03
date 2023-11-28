@@ -25,15 +25,42 @@ function renderProducts() {
 function renderCart() {
   const cartList = document.querySelector('#cart-items');
   const totalElement = document.querySelector('#total');
+  const totalFormElement = document.querySelector('#totalForm');
+  const cartQuantityElement = document.querySelector('#cart-quantity');
+
   cartList.innerHTML = '';
   let total = 0;
+  let quantity = 0;
+
   cart.forEach(item => {
     const li = document.createElement('li');
     li.innerHTML = `${item.name} - R$ ${item.price.toFixed(2)} x${item.quantity} <button onclick="removeFromCart(${item.id})">Remover</button>`;
     cartList.appendChild(li);
     total += item.price * item.quantity;
+    quantity += item.quantity;
   });
+
   totalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
+  totalFormElement.textContent = `Total: R$ ${total.toFixed(2)}`;
+  cartQuantityElement.textContent = `Produtos escolhidos: ${quantity}`;
+
+  return total;
+}
+
+function saveTotalToLocalStorage(total) {
+  const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
+  salesHistory.push(total);
+  localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+}
+
+function calculateTotalSales() {
+  const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
+  const totalSales = salesHistory.reduce((sum, value) => sum + value, 0);
+  alert(`O total das vendas é: R$ ${totalSales.toFixed(2)}`);
+}
+
+function getTotal() {
+  return renderCart();
 }
 
 function addToCart(productId) {
@@ -65,35 +92,34 @@ function checkout() {
   if (cart.length > 0) {
     const totalPrice = calculateTotal().toFixed(2);
 
-    // Preencher o objeto com os dados do cliente
     const cliente = {
-      nome: prompt('Nome do cliente:'),
-      cpf: prompt('CPF:'),
-      email: prompt('E-mail:'),
-      telefone: prompt('Telefone:'),
-      cep: prompt('CEP:')
+      nome: document.getElementById('nome').value,
+      cpf: document.getElementById('cpf').value,
+      email: document.getElementById('email').value,
+      telefone: document.getElementById('telefone').value,
+      cep: document.getElementById('cep').value,
     };
 
-    // Validar os campos
-    const isNomeValid = validator.isLength(cliente.nome, { min: 1, max: 255 });
-    const isCpfValid = validator.isCPF(cliente.cpf);
-    const isEmailValid = validator.isEmail(cliente.email);
-    const isTelefoneValid = validator.isNumeric(cliente.telefone) && validator.isMobilePhone(cliente.telefone, 'any', { strictMode: false });
-    const isCepValid = validator.isNumeric(cliente.cep) && validator.isLength(cliente.cep, { min: 8, max: 8 });
+    const isNomeValid = /^[A-Za-zÀ-ú\s]+$/.test(cliente.nome);
+    const isCpfValid = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(cliente.cpf);
+    const isEmailValid = /\S+@\S+\.\S+/.test(cliente.email);
+    const isTelefoneValid = /^\d{10,11}$/.test(cliente.telefone);
+    const isCepValid = /^\d{5}-\d{3}$/.test(cliente.cep);
 
     if (!cliente.nome.trim() || !isNomeValid || !isCpfValid || !isEmailValid || !isTelefoneValid || !isCepValid) {
       alert('Por favor, preencha todos os campos corretamente.');
       return;
     }
 
-    // Redirecionar para a página de compra
-    window.location.href = `compra.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
+    enviarDadosParaProfessor(cliente, cart);
+
+    saveTotalToLocalStorage(parseFloat(totalPrice));
+
+    window.location.href = `index.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
   } else {
     alert('Adicione produtos ao carrinho antes de finalizar a compra.');
   }
 }
-
-
 
 function calculateTotal() {
   let total = 0;
@@ -105,19 +131,39 @@ function calculateTotal() {
 
 function resetCart() {
   cart = [];
-} 
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
 });
 
+function enviarDadosParaProfessor(cliente, cart) {
+  const produtos = cart.map(item => item.name);
+  const quantidades = cart.map(item => item.quantity);
+  const precos = cart.map(item => item.price * item.quantity);
 
-function validateEmail(email) {
-  var re = /\S+@\S+\.\S+/;
-  return re.test(email);
+  const texto = `Fulano comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
+
+  fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ data: texto }),
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log('Resposta do servidor:', data);
+    alert('E-mail enviado para o professor com os detalhes da compra.');
+  })
+  .catch(error => {
+    console.error('Erro ao enviar e-mail:', error);
+    alert('Erro ao enviar e-mail. Por favor, tente novamente.');
+  });
 }
-    
-console.log(validateEmail('texto@texto.com')); // true
-console.log(validateEmail('texto@texto')); // false
-console.log(validateEmail('texto.com')); // false
-console.log(validateEmail('texto')); // false
+
+function saveTotalToLocalStorage(total) {
+  const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
+  salesHistory.push(total);
+  localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+}
