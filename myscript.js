@@ -121,6 +121,33 @@ function checkout() {
   }
 }
 
+
+function enviarDadosParaServidor(cliente, cart) {
+  const produtos = cart.map(item => item.name);
+  const quantidades = cart.map(item => item.quantity);
+  const precos = cart.map(item => item.price * item.quantity);
+
+  const texto = `Pedido de Compra:\n\nProdutos:\n${produtos.join('\n')}\nQuantidades: ${quantidades.join(', ')}\nPreços: ${precos.map(p => `R$ ${p.toFixed(2)}`).join(', ')}\n\nDados do Comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
+
+  fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ data: texto }),
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log('Resposta do servidor:', data);
+    alert('E-mail enviado para o servidor com os detalhes da compra.');
+  })
+  .catch(error => {
+    console.error('Erro ao enviar e-mail para o servidor:', error);
+    alert('Erro ao enviar e-mail para o servidor. Por favor, tente novamente.');
+  });
+}
+
+
 function calculateTotal() {
   let total = 0;
   cart.forEach(item => {
