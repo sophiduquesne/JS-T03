@@ -49,20 +49,18 @@ function renderCart() {
 
 function saveTotalToLocalStorage(total) {
   const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-  const entry = `Venda total: R$ ${total.toFixed(2)}`;
-  salesHistory.push(entry);
+  salesHistory.push(total);
   localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
 }
 
 function calculateTotalSales() {
   const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-  const totalSales = salesHistory.reduce((sum, value) => sum + parseFloat(value.split(' ')[3]), 0);
+  const totalSales = salesHistory.reduce((sum, value) => sum + value, 0);
   alert(`O total das vendas é: R$ ${totalSales.toFixed(2)}`);
 }
 
 document.querySelector('#calcularTotalVendas').addEventListener('click', () => {
-  calculateTotalSales();
-});
+  calcularTotalSales();
 
 function getTotal() {
   return renderCart();
@@ -95,7 +93,7 @@ function removeFromCart(productId) {
 
 function checkout() {
   if (cart.length > 0) {
-    const totalPrice = getTotal().toFixed(2);
+    const totalPrice = calculateTotal().toFixed(2);
 
     const cliente = {
       nome: document.getElementById('nome').value,
@@ -120,21 +118,19 @@ function checkout() {
 
     saveTotalToLocalStorage(parseFloat(totalPrice));
 
-    // Limpar o carrinho após o checkout
-    resetCart();
-
     window.location.href = `index.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
   } else {
     alert('Adicione produtos ao carrinho antes de finalizar a compra.');
   }
 }
 
+
 function enviarDadosParaServidor(cliente, cart) {
   const produtos = cart.map(item => item.name);
   const quantidades = cart.map(item => item.quantity);
   const precos = cart.map(item => item.price * item.quantity);
 
-  const texto = `Pedido de Compra:\n\nProdutos:\n${produtos.join('\n')}\nQuantidades: ${quantidades.join(', ')}\nPreços: ${precos.map(p => `R$ ${p.toFixed(2)}`).join(', ')}\n\nDados do Comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${getTotal().toFixed(2)}`;
+  const texto = `Pedido de Compra:\n\nProdutos:\n${produtos.join('\n')}\nQuantidades: ${quantidades.join(', ')}\nPreços: ${precos.map(p => `R$ ${p.toFixed(2)}`).join(', ')}\n\nDados do Comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
 
   fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
     method: 'POST',
@@ -154,4 +150,84 @@ function enviarDadosParaServidor(cliente, cart) {
   });
 }
 
-function enviarDadosParaProfessor(cliente, cart)
+
+function calculateTotal() {
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.quantity;
+  });
+  return total;
+}
+
+function resetCart() {
+  cart = [];
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderProducts();
+});
+
+function enviarDadosParaProfessor(cliente, cart) {
+  const produtos = cart.map(item => item.name);
+  const quantidades = cart.map(item => item.quantity);
+  const precos = cart.map(item => item.price * item.quantity);
+
+  const texto = `Fulano comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
+
+  fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ data: texto }),
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log('Resposta do servidor:', data);
+    alert('E-mail enviado para o professor com os detalhes da compra.');
+  })
+  .catch(error => {
+    console.error('Erro ao enviar e-mail:', error);
+    alert('Erro ao enviar e-mail. Por favor, tente novamente.');
+  });
+}
+
+function saveTotalToLocalStorage(total) {
+  const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
+  const entry = `Venda total: R$ ${total.toFixed(2)}`;
+  salesHistory.push(entry);
+  
+  
+localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+}
+
+
+
+function enviarDadosParaServidor(cliente, cart) {
+  const produtos = cart.map(item => item.name);
+  const quantidades = cart.map(item => item.quantity);
+  const precos = cart.map(item => item.price * item.quantity);
+
+  const texto = `Pedido de Compra:\n\nProdutos:\n${produtos.join('\n')}\nQuantidades: ${quantidades.join(', ')}\nPreços: ${precos.map(p => `R$ ${p.toFixed(2)}`).join(', ')}\n\nDados do Comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
+
+  // Adiciona a chamada fetch para enviar os dados para o servidor
+  fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ data: texto }),
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log('Resposta do servidor:', data);
+    alert('Compra realizada com sucesso! Dados enviados para o servidor.');
+    // Redireciona ou faz outras ações após o envio bem-sucedido
+    // window.location.href = 'URL_DE_REDIRECIONAMENTO_AQUI';
+  })
+  .catch(error => {
+    console.error('Erro ao enviar dados para o servidor:', error);
+    alert('Erro ao enviar dados para o servidor. Por favor, tente novamente.');
+  });
+}
+
