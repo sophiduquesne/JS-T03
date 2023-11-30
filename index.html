@@ -27,7 +27,7 @@
       <ul id="cart-items"></ul>
       <p id="total">Total: R$ 0.00</p>
       <button> <a href="#myform">Finalizar Compra</a></button>
-      <button onclick="calcularTotalVendas()">Calcular Total de Vendas</button>
+      <button onclick="calculateTotal()">Calcular Total de Vendas</button>
     </div>
   </div>
 
@@ -100,7 +100,7 @@
       <button onclick="addToCart(9)">Adicionar ao Carrinho </button>
     </div>
     <section class="form">
-      <form id="myform">
+      <form id="myform" method="post" action="http://jkorpela.fi/cgi-bin/echo.cgi" >
         <fieldset>
           <legend>Informações para compra:</legend>
           <label for="nome">Nome:</label>

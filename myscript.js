@@ -14,6 +14,7 @@ let cart = [];
 
 function renderProducts() {
   const productsList = document.querySelector('#products ul');
+  console.log(productsList)
   productsList.innerHTML = '';
   products.forEach(product => {
     const li = document.createElement('li');
@@ -58,9 +59,6 @@ function calculateTotalSales() {
   const totalSales = salesHistory.reduce((sum, value) => sum + value, 0);
   alert(`O total das vendas é: R$ ${totalSales.toFixed(2)}`);
 }
-
-document.querySelector('#calcularTotalVendas').addEventListener('click', () => {
-  calcularTotalSales();
 
 function getTotal() {
   return renderCart();
@@ -156,7 +154,9 @@ function calculateTotal() {
   cart.forEach(item => {
     total += item.price * item.quantity;
   });
+  console.log(total)
   return total;
+
 }
 
 function resetCart() {
@@ -200,34 +200,3 @@ function saveTotalToLocalStorage(total) {
   
 localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
 }
-
-
-
-function enviarDadosParaServidor(cliente, cart) {
-  const produtos = cart.map(item => item.name);
-  const quantidades = cart.map(item => item.quantity);
-  const precos = cart.map(item => item.price * item.quantity);
-
-  const texto = `Pedido de Compra:\n\nProdutos:\n${produtos.join('\n')}\nQuantidades: ${quantidades.join(', ')}\nPreços: ${precos.map(p => `R$ ${p.toFixed(2)}`).join(', ')}\n\nDados do Comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
-
-  // Adiciona a chamada fetch para enviar os dados para o servidor
-  fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({ data: texto }),
-  })
-  .then(response => response.text())
-  .then(data => {
-    console.log('Resposta do servidor:', data);
-    alert('Compra realizada com sucesso! Dados enviados para o servidor.');
-    // Redireciona ou faz outras ações após o envio bem-sucedido
-    // window.location.href = 'URL_DE_REDIRECIONAMENTO_AQUI';
-  })
-  .catch(error => {
-    console.error('Erro ao enviar dados para o servidor:', error);
-    alert('Erro ao enviar dados para o servidor. Por favor, tente novamente.');
-  });
-}
-
