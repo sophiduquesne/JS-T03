@@ -191,6 +191,10 @@ function enviarDadosParaProfessor(cliente, cart) {
 
 function saveTotalToLocalStorage(total) {
   const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-  salesHistory.push(total);
-  localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+  const entry = `Venda total: R$ ${total.toFixed(2)}`;
+  salesHistory.push(entry);
+  
+  
+localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
 }
+
