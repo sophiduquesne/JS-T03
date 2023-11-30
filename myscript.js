@@ -12,16 +12,7 @@ const products = [
 
 let cart = [];
 
-function renderProducts() {
-  const productsList = document.querySelector('#products ul');
-  console.log(productsList)
-  productsList.innerHTML = '';
-  products.forEach(product => {
-    const li = document.createElement('li');
-    li.innerHTML = `${product.name} - R$ ${product.price.toFixed(2)} <button onclick="addToCart(${product.id})">Adicionar ao Carrinho</button>`;
-    productsList.appendChild(li);
-  });
-}
+
 
 function renderCart() {
   const cartList = document.querySelector('#cart-items');
@@ -154,7 +145,6 @@ function calculateTotal() {
   cart.forEach(item => {
     total += item.price * item.quantity;
   });
-  console.log(total)
   return total;
 
 }
@@ -162,10 +152,6 @@ function calculateTotal() {
 function resetCart() {
   cart = [];
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  renderProducts();
-});
 
 function enviarDadosParaProfessor(cliente, cart) {
   const produtos = cart.map(item => item.name);
@@ -194,7 +180,6 @@ function enviarDadosParaProfessor(cliente, cart) {
 
 function saveTotalToLocalStorage(total) {
   const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-  const entry = `Venda total: R$ ${total.toFixed(2)}`;
   salesHistory.push(entry);
   
   
