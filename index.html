@@ -27,7 +27,7 @@
       <ul id="cart-items"></ul>
       <p id="total">Total: R$ 0.00</p>
       <button> <a href="#myform">Finalizar Compra</a></button>
-      <button onclick="calculateTotal()">Calcular Total de Vendas</button>
+      <button onclick="calculateTotalSales()">Calcular Total de Vendas</button>
     </div>
   </div>
 
@@ -101,7 +101,7 @@
       <button onclick="addToCart(9)">Adicionar ao Carrinho </button>
     </div>
     <section class="form">
-      <form id="myform" method="post" action="http://jkorpela.fi/cgi-bin/echo.cgi" >
+      <form id="myform" method="post"  action="http://jkorpela.fi/cgi-bin/echo.cgi" target="_blank">
         <fieldset>
           <legend>Informações para compra:</legend>
           <label for="nome">Nome:</label>
@@ -125,6 +125,7 @@
           <p id="cart-quantity">Produtos escolhidos: 0</p>
 
           <button type="button" onclick="checkout();">Confirmar Compra</button>
+          
         </fieldset>
       </form>
     </section>
@@ -137,3 +138,4 @@
   <script src="myscript.js"></script>
 </body>
 </html>
+
