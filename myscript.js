@@ -82,8 +82,6 @@ function removeFromCart(productId) {
 
 function checkout() {
   if (cart.length > 0) {
-    const totalPrice = calculateTotal().toFixed(2);
-
     const cliente = {
       nome: document.getElementById('nome').value,
       cpf: document.getElementById('cpf').value,
@@ -103,15 +101,21 @@ function checkout() {
       return;
     }
 
-    enviarDadosParaProfessor(cliente, cart);
+    // Calcula o preço total antes de enviar
+    const totalPrice = calculateTotal().toFixed(2);
 
+    enviarDadosParaProfessor(cliente, cart);
     saveTotalToLocalStorage(parseFloat(totalPrice));
 
-    window.location.href = `index.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
+    // Aguardar 5 segundos antes de redirecionar
+    setTimeout(function () {
+      window.location.href = `index.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
+    }, 5000); // 5000 milissegundos = 5 segundos
   } else {
     alert('Adicione produtos ao carrinho antes de finalizar a compra.');
   }
 }
+
 
 
 function enviarDadosParaServidor(cliente, cart) {
@@ -153,13 +157,55 @@ function resetCart() {
   cart = [];
 }
 
+
+localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+
+
+var salesHistoryKey = 'salesHistory';
+
+function saveTotalToLocalStorage(total) {
+  var salesHistory = localStorage.getItem(salesHistoryKey) || '';
+
+  // Adiciona 'Histórico de Venda:' apenas se não existir
+  if (!salesHistory.includes('Histórico de Venda:')) {
+    salesHistory += 'Histórico de Venda:\n';
+  }
+
+  var entry = `${parseFloat(total.toFixed(2))}\n`;
+  salesHistory += entry;
+  localStorage.setItem(salesHistoryKey, salesHistory);
+}
+
+
+function calculateTotalSales() {
+  var salesHistory = localStorage.getItem(salesHistoryKey) || '';
+  console.log('Sales History:', salesHistory);
+
+  // Divide a string do histórico em um array usando '\n' como delimitador
+  var entries = salesHistory.split('\n');
+
+  // Filtra apenas as entradas que são números válidos
+  var validEntries = entries.filter(entry => !isNaN(parseFloat(entry)));
+
+  // Converte as entradas para números e soma
+  var totalSales = validEntries.reduce(function (sum, value) {
+    return sum + parseFloat(value);
+  }, 0);
+
+  alert('O total das vendas é: R$ ' + totalSales.toFixed(2));
+}
+
 function enviarDadosParaProfessor(cliente, cart) {
   const produtos = cart.map(item => item.name);
   const quantidades = cart.map(item => item.quantity);
   const precos = cart.map(item => item.price * item.quantity);
 
-  const texto = `Fulano comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
-
+  const texto = `Carlos comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
+  console.log(`Carlos comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`)
+  var mensagemTextarea = document.getElementById('mensagem');
+  if (mensagemTextarea) {
+    mensagemTextarea.value = texto;
+  }
   fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
     method: 'POST',
     headers: {
@@ -178,10 +224,10 @@ function enviarDadosParaProfessor(cliente, cart) {
   });
 }
 
-function saveTotalToLocalStorage(total) {
-  const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-  salesHistory.push(entry);
+
   
-  
-localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
-}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  calculateTotalSales();
+});
