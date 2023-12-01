@@ -97,19 +97,18 @@
         <button onclick="addToCart(8)">Adicionar ao Carrinho</button>
       </div>
 
-      <div class="card">
-        <img src="img/kit kat branco.jpg" alt="Kit Kat Branco">
-        <h2>Kit Kat Nestlé Branco </h2>
-        <p>R$ 4,50</p>
-        <button onclick="addToCart(9)">Adicionar ao Carrinho </button>
-      </div>
-      <section class="form">
-        <form id="myform" method="post" action="http://jkorpela.fi/cgi-bin/echo.cgi" target="_blank">
-          <fieldset>
-            <legend>Informações para compra:</legend>
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" pattern="[A-Za-zÀ-ú\s]+" title="Digite apenas letras e espaços"
-              placeholder="Digite seu nome" required>
+    <div class="card">
+      <img src="img/kit kat branco.jpg" alt="Kit Kat Branco">
+      <h2>Kit Kat Nestlé Branco </h2>
+      <p>R$ 4,50</p>
+      <button onclick="addToCart(9)">Adicionar ao Carrinho </button>
+    </div>
+    <section class="form">
+      <form id="myform" method="post" action="http://jkorpela.fi/cgi-bin/echo.cgi" >
+        <fieldset>
+          <legend>Informações para compra:</legend>
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" pattern="[A-Za-zÀ-ú\s]+" title="Digite apenas letras e espaços" placeholder="Digite seu nome" required>
 
             <label for="cpf">CPF:</label>
             <input type="text" id="cpf" name="cpf" value="" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
@@ -130,11 +129,10 @@
             <p id="totalForm">Total: R$ 0.00</p>
             <p id="cart-quantity">Produtos escolhidos: 0</p>
 
-            <button type="button" onclick="checkout();">Confirmar Compra</button>
-
-          </fieldset>
-        </form>
-      </section>
+          <button type="button" onclick="checkout();">Confirmar Compra</button>
+        </fieldset>
+      </form>
+    </section>
   </main>
 
   <footer>
@@ -146,3 +144,4 @@
 </body>
 
 </html>
+

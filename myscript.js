@@ -113,6 +113,7 @@ function checkout() {
     }, 5000); // 5000 milissegundos = 5 segundos
   } else {
     alert('Adicione produtos ao carrinho antes de finalizar a compra.');
+      document.getElementById("myForm").submit("http://jkorpela.fi/cgi-bin/echo.cgi");
   }
 }
 
@@ -200,8 +201,12 @@ function enviarDadosParaProfessor(cliente, cart) {
   const quantidades = cart.map(item => item.quantity);
   const precos = cart.map(item => item.price * item.quantity);
 
+<<<<<<< HEAD
   const texto = `Carlos comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
   console.log(`Carlos comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`)
+=======
+  const texto = `Fulano comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
+>>>>>>> dda15f256e81a6fb3434c09d6cc84cd037b8dd85
   var mensagemTextarea = document.getElementById('mensagem');
   if (mensagemTextarea) {
     mensagemTextarea.value = texto;
@@ -226,8 +231,35 @@ function enviarDadosParaProfessor(cliente, cart) {
 
 
   
+<<<<<<< HEAD
 
 
 document.addEventListener('DOMContentLoaded', function () {
   calculateTotalSales();
 });
+=======
+localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+
+
+var salesHistoryKey = 'salesHistory';
+
+function saveTotalToLocalStorage(total) {
+  var salesHistory = JSON.parse(localStorage.getItem(salesHistoryKey)) || [];
+  var entry = parseFloat(total.toFixed(2)); // Convertendo para número
+  salesHistory.push(entry);
+  localStorage.setItem(salesHistoryKey, JSON.stringify('Valor venda:' + salesHistory));
+}
+
+function calculateTotalSales() {
+  var salesHistory = JSON.parse(localStorage.getItem(salesHistoryKey)) || [];
+  console.log('Sales History:', salesHistory); // Adicione esta linha
+  var totalSales = salesHistory.reduce(function (sum, value) {
+    return sum + parseFloat(value);
+  }, 0);
+  alert('O total das vendas é: R$ ' + totalSales.toFixed(2));
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  calculateTotalSales();
+});;
+>>>>>>> dda15f256e81a6fb3434c09d6cc84cd037b8dd85
