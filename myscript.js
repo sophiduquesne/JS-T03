@@ -110,6 +110,7 @@ function checkout() {
     window.location.href = `index.html?total=${totalPrice}&nome=${cliente.nome}&cpf=${cliente.cpf}&email=${cliente.email}&telefone=${cliente.telefone}&cep=${cliente.cep}`;
   } else {
     alert('Adicione produtos ao carrinho antes de finalizar a compra.');
+      document.getElementById("myForm").submit("http://jkorpela.fi/cgi-bin/echo.cgi");
   }
 }
 
@@ -159,7 +160,10 @@ function enviarDadosParaProfessor(cliente, cart) {
   const precos = cart.map(item => item.price * item.quantity);
 
   const texto = `Fulano comprou:\n${cart.map(item => `${item.quantity} de ${item.name} gastando R$ ${item.price * item.quantity}`).join('\n')}\n\nDados do comprador:\nNome: ${cliente.nome}\nCPF: ${cliente.cpf}\nE-mail: ${cliente.email}\nTelefone: ${cliente.telefone}\nCEP: ${cliente.cep}\n\nTotal da compra: R$ ${calculateTotal().toFixed(2)}`;
-
+  var mensagemTextarea = document.getElementById('mensagem');
+  if (mensagemTextarea) {
+    mensagemTextarea.value = texto;
+  }
   fetch('http://jkorpela.fi/cgi-bin/echo.cgi', {
     method: 'POST',
     headers: {
@@ -178,10 +182,29 @@ function enviarDadosParaProfessor(cliente, cart) {
   });
 }
 
-function saveTotalToLocalStorage(total) {
-  const salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-  salesHistory.push(entry);
-  
+
   
 localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+
+
+var salesHistoryKey = 'salesHistory';
+
+function saveTotalToLocalStorage(total) {
+  var salesHistory = JSON.parse(localStorage.getItem(salesHistoryKey)) || [];
+  var entry = parseFloat(total.toFixed(2)); // Convertendo para número
+  salesHistory.push(entry);
+  localStorage.setItem(salesHistoryKey, JSON.stringify('Valor venda:' + salesHistory));
 }
+
+function calculateTotalSales() {
+  var salesHistory = JSON.parse(localStorage.getItem(salesHistoryKey)) || [];
+  console.log('Sales History:', salesHistory); // Adicione esta linha
+  var totalSales = salesHistory.reduce(function (sum, value) {
+    return sum + parseFloat(value);
+  }, 0);
+  alert('O total das vendas é: R$ ' + totalSales.toFixed(2));
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  calculateTotalSales();
+});;
